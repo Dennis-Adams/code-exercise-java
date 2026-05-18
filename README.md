@@ -2,7 +2,7 @@
 
 ## Task
 
-Build a simple **URL shortener** in a **preferably JVM-based language** (e.g. Java, Kotlin).
+Build a simple **URL shortener** in **your preferred language** (e.g. Java, C#, Python).
 
 It should:
 
