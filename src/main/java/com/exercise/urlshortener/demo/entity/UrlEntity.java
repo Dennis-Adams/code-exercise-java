@@ -2,8 +2,10 @@ package com.exercise.urlshortener.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "urls")
 public class UrlEntity {
@@ -17,11 +19,6 @@ public class UrlEntity {
     private String fullUrl;
 
     @Column(unique = true)
-    private String shortCode; // This will store either the custom alias or the Base62 encoded ID
+    private String alias; // This will store either the custom alias or the Base62 encoded ID
 
-    public void setId(Long id) { this.id = id; }
-
-    public void setFullUrl(String fullUrl) { this.fullUrl = fullUrl; }
-
-    public void setShortCode(String shortCode) { this.shortCode = shortCode; }
 }
