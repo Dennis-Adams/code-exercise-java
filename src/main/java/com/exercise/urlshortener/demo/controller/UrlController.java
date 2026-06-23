@@ -15,6 +15,7 @@ import java.net.URI;
 @RestController
 public class UrlController {
 
+    public static final String ALIAS_NOT_FOUND = "Alias not found";
     private final UrlRepository urlRepository;
 
     // Injecting the repository via constructor
@@ -64,6 +65,22 @@ public class UrlController {
             return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alias not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ALIAS_NOT_FOUND);
+    }
+
+    @DeleteMapping("/{alias}")
+    public ResponseEntity<?> deleteUrl(@PathVariable String alias) {
+        // Look up the alias in the database
+        var optionalUrl = urlRepository.findByAlias(alias);
+
+        // If it exists, delete it and return a 204 No Content status
+        if (optionalUrl.isPresent()) {
+            urlRepository.delete(optionalUrl.get());
+            return ResponseEntity.noContent().build();
+        }
+
+        // If it doesn't exist, return a 404, Not Found matching the OpenAPI contract
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ALIAS_NOT_FOUND);
     }
 }
