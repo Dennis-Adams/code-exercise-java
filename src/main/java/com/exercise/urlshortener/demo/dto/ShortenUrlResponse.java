@@ -1,5 +1,10 @@
 package com.exercise.urlshortener.demo.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ShortenUrlResponse {
     private String shortUrl;
 
@@ -7,11 +12,4 @@ public class ShortenUrlResponse {
         this.shortUrl = shortUrl;
     }
 
-    public String getShortUrl() {
-        return shortUrl;
-    }
-
-    public void setShortUrl(String shortUrl) {
-        this.shortUrl = shortUrl;
-    }
 }
