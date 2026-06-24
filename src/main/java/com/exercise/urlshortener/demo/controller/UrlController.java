@@ -15,6 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class UrlController {
 
     public static final String ALIAS_NOT_FOUND = "Alias not found";
