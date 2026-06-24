@@ -6,6 +6,7 @@ import com.exercise.urlshortener.demo.repository.UrlRepository;
 import com.exercise.urlshortener.demo.util.Base62Encoder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -17,6 +18,9 @@ public class UrlService {
     private final UrlRepository urlRepository;
     private final SecureRandom secureRandom = new SecureRandom();
     private static final int MAX_RETRIES = 10;
+
+    @Value("${app.base-url:http://localhost:8080/}")
+    private String baseUrl;
 
     public UrlService(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
@@ -69,7 +73,7 @@ public class UrlService {
                 .map(entity -> new UrlResponse(
                         entity.getAlias(),
                         entity.getFullUrl(),
-                        entity.getShortUrl()))
+                        baseUrl + entity.getAlias()))
                 .toList();
     }
 
