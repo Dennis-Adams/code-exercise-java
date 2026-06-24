@@ -2,6 +2,7 @@ package com.exercise.urlshortener.demo.controller;
 
 import com.exercise.urlshortener.demo.dto.ShortenUrlRequest; // 🌟 Import the DTO from its package
 import com.exercise.urlshortener.demo.dto.ShortenUrlResponse;
+import com.exercise.urlshortener.demo.dto.UrlResponse;
 import com.exercise.urlshortener.demo.entity.UrlEntity;
 import com.exercise.urlshortener.demo.repository.UrlRepository;
 import com.exercise.urlshortener.demo.util.Base62Encoder;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class UrlController {
@@ -80,7 +82,24 @@ public class UrlController {
         }
 
         // If it doesn't exist, return a 404, Not Found matching the OpenAPI contract
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ALIAS_NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ALIAS_NOT_FOUND);
+    }
+
+    @GetMapping("/urls")
+    public ResponseEntity<List<UrlResponse>> getAllUrls() {
+        // fetch all entities
+        List<UrlEntity> entities = urlRepository.findAll();
+
+        // map entities to UrlResponse
+        List<UrlResponse> urlResponses =
+                entities.stream()
+                        .map(entity ->
+                                new UrlResponse(
+                                        entity.getAlias(),
+                                        entity.getFullUrl(),
+                                        "http://localhost:8080/" + entity.getAlias())).toList();
+
+        // return list with a 200 status
+        return ResponseEntity.ok(urlResponses);
     }
 }

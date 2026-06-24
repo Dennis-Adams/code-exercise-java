@@ -11,10 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -108,5 +108,44 @@ class UrlShortenerIntegrationTest {
         mockMvc.perform(delete("/non-existent-alias-123"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Alias not found"));
+    }
+
+
+    @Test
+    void shouldReturnListOfUrls() throws Exception {
+        // GET /urls endpoint and expect a 200 OK with a JSON array
+        mockMvc.perform(get("/urls"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNoUrlsExist() throws Exception {
+        // GET urls endpoint, expect an empty array
+        mockMvc.perform(get("/urls"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void shouldReturnMultipleUrlsWhenDatabaseIsPopulated() throws Exception {
+        // save a couple of entries to the database
+        UrlEntity url1 = new UrlEntity();
+        url1.setAlias("alias1");
+        url1.setFullUrl("https://example.com/first-url");
+        urlRepository.save(url1);
+
+        UrlEntity url2 = new UrlEntity();
+        url2.setAlias("alias2");
+        url2.setFullUrl("https://example.com/second-url");
+        urlRepository.save(url2);
+
+        // Call GET /urls and expect an array with exactly 2 items
+        mockMvc.perform(get("/urls"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].alias").value("alias1")) // Check the first item
+                .andExpect(jsonPath("$[1].alias").value("alias2")); // Check the second item
     }
 }
