@@ -15,10 +15,17 @@ public class UrlEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // This auto-incrementing ID will be fed into your Base62Encoder!
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2048)
     private String fullUrl;
 
-    @Column(unique = true)
-    private String alias; // This will store either the custom alias or the Base62 encoded ID
+    @Column(unique = true, nullable = false)
+    private String alias; // This will store either the custom alias or a generated alias
 
+    @Transient
+    public String getShortUrl() {
+        if (this.alias != null) {
+            return "http://localhost:8080/" + this.alias;
+        }
+        return null;
+    }
 }

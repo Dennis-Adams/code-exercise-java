@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface UrlRepository extends JpaRepository<UrlEntity, Long> {
     Optional<UrlEntity> findByAlias(String shortCode);
+    boolean existsByAlias(String alias);
 }
