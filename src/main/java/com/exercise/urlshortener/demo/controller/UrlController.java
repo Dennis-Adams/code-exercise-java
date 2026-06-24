@@ -4,6 +4,7 @@ import com.exercise.urlshortener.demo.dto.ShortenUrlRequest; // 🌟 Import the 
 import com.exercise.urlshortener.demo.dto.ShortenUrlResponse;
 import com.exercise.urlshortener.demo.dto.UrlResponse;
 import com.exercise.urlshortener.demo.entity.UrlEntity;
+import com.exercise.urlshortener.demo.exception.AliasNotFoundException;
 import com.exercise.urlshortener.demo.service.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,35 +28,32 @@ public class UrlController {
     }
 
     @PostMapping("/shorten")
-    public ResponseEntity<?> shortenUrl(@Valid @RequestBody ShortenUrlRequest request) {
-        try {
-            UrlEntity savedUrl = urlService.shortenUrl(request.getFullUrl(), request.getCustomAlias());
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ShortenUrlResponse(savedUrl.getShortUrl()));
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<ShortenUrlResponse> shortenUrl(@Valid @RequestBody ShortenUrlRequest request) {
+        UrlEntity savedUrl = urlService.shortenUrl(request.getFullUrl(), request.getCustomAlias());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ShortenUrlResponse(savedUrl.getShortUrl()));
     }
 
     @GetMapping("/{alias}")
-    public ResponseEntity<?> shortenUrl(@Valid @PathVariable String alias) {
+    public ResponseEntity<Void> redirectUrl(@Valid @PathVariable String alias) {
 
         Optional<String> originalUrl = urlService.getOriginalUrl(alias);
 
         if (originalUrl.isPresent()) {
             return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl.get())).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ALIAS_NOT_FOUND);
+
+        throw new AliasNotFoundException(ALIAS_NOT_FOUND);
     }
 
     @DeleteMapping("/{alias}")
-    public ResponseEntity<?> deleteUrl(@PathVariable String alias) {
+    public ResponseEntity<Void> deleteUrl(@PathVariable String alias) {
         boolean deleted = urlService.deleteByAlias(alias);
 
         if (deleted) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ALIAS_NOT_FOUND);
+
+        throw new AliasNotFoundException(ALIAS_NOT_FOUND);
     }
 
     @GetMapping("/urls")

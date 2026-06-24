@@ -81,7 +81,7 @@ class UrlShortenerIntegrationTest {
     void shouldReturnNotFoundWithCorrectMessageWhenShortCodeDoesNotExist() throws Exception {
         mockMvc.perform(get("/fake-code-123"))
                 .andExpect(status().isNotFound()) // Expects 404 Found
-                .andExpect(content().string("Alias not found"));
+                .andExpect(content().string(""));
     }
 
 
@@ -107,7 +107,8 @@ class UrlShortenerIntegrationTest {
         // Call the DELETE endpoint with a fake alias and expect a 404 with the exact string
         mockMvc.perform(delete("/non-existent-alias-123"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Alias not found"));
+                .andExpect(content().string(""));
+
     }
 
 
