@@ -21,7 +21,20 @@ function App() {
             });
     };
 
-    // 3. Use 'useEffect' to run the fetch function once when the page first loads
+    const handleDelete = (alias) => {
+        // Call the DELETE /{alias} endpoint
+        axios.delete(`http://localhost:8080/${alias}`)
+            .then(() => {
+                // If successful (204 No Content), refresh the table to remove the row
+                fetchUrls();
+            })
+            .catch(error => {
+                console.error("Could not delete URL:", error);
+                alert("Could not delete the URL.");
+            });
+    };
+
+    // Use 'useEffect' to run the fetch function once when the page first loads
     useEffect(() => {
         fetchUrls();
     }, []);
@@ -41,7 +54,7 @@ function App() {
             })
             .catch(error => {
                 // Failure: capture the error from the API request
-                if(error.response) {
+                if (error.response) {
                     setError('apiError', {
                         message: error.response?.data?.message || 'Alias already taken or invalid input'
                     });
@@ -53,7 +66,7 @@ function App() {
             });
     };
 
-    // 4. Render the UI with the form
+    // Render the UI with the form
     return (
         <div style={{padding: '2rem', fontFamily: 'sans-serif'}}>
             <h1>URL Shortener</h1>
@@ -73,22 +86,22 @@ function App() {
                 <button type="submit" style={{marginTop: '1rem'}}>Shorten</button>
             </form>
 
-            {/* 5. Display API Errors */}
-            {errors.apiError && <p style={{ color: 'red', marginTop: '1rem' }}>{errors.apiError.message}</p>}
-            {/* 6. Display Success */}
+            {/* Display API Errors */}
+            {errors.apiError && <p style={{color: 'red', marginTop: '1rem'}}>{errors.apiError.message}</p>}
+            {/* Display Success */}
             {shortUrl && (
-                <div style={{ marginTop: '1rem', color: 'green' }}>
+                <div style={{marginTop: '1rem', color: 'green'}}>
                     Success! Your short URL is: <a href={shortUrl} target="_blank" rel="noreferrer">{shortUrl}</a>
                 </div>
             )}
 
             {/* Draw the Table */}
-            <hr style={{ margin: '2rem 0' }} />
+            <hr style={{margin: '2rem 0'}}/>
             <h2>All Shortened URLs</h2>
 
-            <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+            <table style={{width: '100%', textAlign: 'left', borderCollapse: 'collapse'}}>
                 <thead>
-                <tr style={{ borderBottom: '2px solid #ccc' }}>
+                <tr style={{borderBottom: '2px solid #ccc'}}>
                     <th>Alias</th>
                     <th>Original URL</th>
                     <th>Short URL</th>
@@ -98,12 +111,17 @@ function App() {
                 <tbody>
                 {/* We use .map() to loop through the 'urls' array and create a row for each one */}
                 {urls.map((url) => (
-                    <tr key={url.alias} style={{ borderBottom: '1px solid #eee' }}>
-                        <td style={{ padding: '0.5rem 0' }}>{url.alias}</td>
-                        <td><a href={url.fullUrl} target="_blank" rel="noreferrer" style={{ color: 'blue' }}>Link</a></td>
-                        <td><a href={url.shortUrl} target="_blank" rel="noreferrer" style={{ color: 'blue' }}>{url.shortUrl}</a></td>
+                    <tr key={url.alias} style={{borderBottom: '1px solid #eee'}}>
+                        <td style={{padding: '0.5rem 0'}}>{url.alias}</td>
+                        <td><a href={url.fullUrl} target="_blank" rel="noreferrer" style={{color: 'blue'}}>Link</a></td>
+                        <td><a href={url.shortUrl} target="_blank" rel="noreferrer"
+                               style={{color: 'blue'}}>{url.shortUrl}</a></td>
                         <td>
-                            <button style={{ color: 'red' }}>Delete</button> {/* Placeholder for the delete function! */}
+                            <button
+                                onClick={() => handleDelete(url.alias)}
+                                style={{color: 'red', cursor: 'pointer'}}>
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 ))}
