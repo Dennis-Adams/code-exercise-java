@@ -34,7 +34,7 @@ public class UrlController {
     @PostMapping("/shorten")
     public ResponseEntity<ShortenUrlResponse> shortenUrl(@Valid @RequestBody ShortenUrlRequest request) {
         UrlEntity savedUrl = urlService.shortenUrl(request.getFullUrl(), request.getCustomAlias());
-        String finalShortUrl = baseUrl + savedUrl.getAlias();
+        String finalShortUrl = baseUrl + "/" + savedUrl.getAlias();
         return ResponseEntity.status(HttpStatus.CREATED).body(new ShortenUrlResponse(finalShortUrl));
     }
 

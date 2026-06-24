@@ -73,7 +73,7 @@ public class UrlService {
                 .map(entity -> new UrlResponse(
                         entity.getAlias(),
                         entity.getFullUrl(),
-                        baseUrl + entity.getAlias()))
+                        baseUrl + "/" + entity.getAlias()))
                 .toList();
     }
 
