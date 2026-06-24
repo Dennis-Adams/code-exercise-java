@@ -51,6 +51,7 @@ public class UrlService {
         return urlRepository.findByAlias(alias).map(UrlEntity::getFullUrl);
     }
 
+    @Transactional
     public boolean deleteByAlias(String alias) {
         // Look up the alias in the database
         var optionalUrl = urlRepository.findByAlias(alias);
