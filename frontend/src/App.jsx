@@ -51,6 +51,7 @@ function App() {
             .then(response => {
                 // Success: display the shortened URL
                 setShortUrl(response.data.shortUrl);
+                fetchUrls(); // make sure to fetch the updated list of URLs
             })
             .catch(error => {
                 // Failure: capture the error from the API request
