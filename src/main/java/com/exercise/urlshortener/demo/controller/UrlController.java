@@ -7,6 +7,7 @@ import com.exercise.urlshortener.demo.entity.UrlEntity;
 import com.exercise.urlshortener.demo.exception.AliasNotFoundException;
 import com.exercise.urlshortener.demo.service.UrlService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ public class UrlController {
     public static final String ALIAS_NOT_FOUND = "Alias not found";
     private final UrlService urlService;
 
+    @Value("${app.base-url:http://localhost:8080/}")
+    private String baseUrl;
+
     // Injecting the repository via constructor
     public UrlController(UrlService urlService) {
         this.urlService = urlService;
@@ -30,7 +34,8 @@ public class UrlController {
     @PostMapping("/shorten")
     public ResponseEntity<ShortenUrlResponse> shortenUrl(@Valid @RequestBody ShortenUrlRequest request) {
         UrlEntity savedUrl = urlService.shortenUrl(request.getFullUrl(), request.getCustomAlias());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ShortenUrlResponse(savedUrl.getShortUrl()));
+        String finalShortUrl = baseUrl + "/" + savedUrl.getAlias();
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ShortenUrlResponse(finalShortUrl));
     }
 
     @GetMapping("/{alias}")

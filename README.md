@@ -1,3 +1,34 @@
+## 🚀 Quick Start (How to Build and Run Locally)
+
+To get this application running on your local machine, you will need Docker installed.
+
+**Step 1: Start the Application**
+Navigate to the project root directory in your terminal and run the following command to build and start the containers:
+
+```bash
+docker compose up --build
+```
+Step 2: Wait for Initialization The application will take a moment to download dependencies and initialize the database. Wait until you see the following line in your terminal's log output, which confirms the backend is ready:
+main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/' <br>
+
+💻 Example Usage
+##### Frontend UI
+Once the backend is successfully running, open your web browser and navigate to the decoupled React frontend at:
+👉 http://localhost:5173
+
+##### Shortening a URL 
+You will be presented with a user interface containing a form with the following fields:
+* Full URL: (Input field for the original long URL)
+* Custom Alias (Optional): (Input field for your preferred custom alias. 
+* [ Shorten ]: (A shorten button to submit the request)
+
+Once you press the [ Shorten ] button, the system will generate a shortened URL for you. <br> If you provided a custom alias, it will be used; otherwise, a random alias will be generated.
+##### Viewing Your URLs 
+Directly below this form, you will find a list titled All Shortened URLs. This section will dynamically display the URLs you have successfully shortened and saved to the database.
+##### 💡 Assumptions
+Error Responses: There is no response body specified in the openapi.yaml contract for when an alias does not exist (404 Not Found). I was tempted to add a JSON error text message for clarity, but I deliberately left it empty to strictly conform with the provided OpenAPI specification
+
+
 # URL Shortener Coding Exercise
 
 ## Task
