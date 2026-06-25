@@ -19,7 +19,7 @@ public class ShortenUrlRequest {
     private String fullUrl;
 
     @Pattern(
-            regexp = "^[a-zA-Z0-9-_]+$",
+            regexp = "^[a-zA-Z0-9-_]*$",
             message = "Invalid input: Custom alias must contain only letters, numbers, hyphens, or underscores"
     )
     private String customAlias; // This is optional, according to the openapi.yaml
