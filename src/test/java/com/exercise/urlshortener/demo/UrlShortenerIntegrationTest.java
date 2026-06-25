@@ -149,4 +149,15 @@ class UrlShortenerIntegrationTest {
                 .andExpect(jsonPath("$[0].alias").value("alias1")) // Check the first item
                 .andExpect(jsonPath("$[1].alias").value("alias2")); // Check the second item
     }
+
+    @Test
+    public void shortenUrlWithInvalidProtocolShouldReturn400BadRequest() throws Exception {
+        String invalidPayload = "{\"fullUrl\": \"ftp://example.com/file.txt\"}"; // ftp is invalid protocol
+
+        mockMvc.perform(post("/shorten")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidPayload))
+                // This asserts that the API responds with a 400 Bad Request status
+                .andExpect(status().isBadRequest());
+    }
 }
