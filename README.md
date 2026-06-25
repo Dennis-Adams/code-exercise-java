@@ -1,6 +1,17 @@
 ## 🚀 Quick Start (How to Build and Run Locally)
 
+
+### 🚀 Pre-requisites
 To get this application running on your local machine, you will need Docker installed.
+
+### Running Tests
+This project includes both unit tests and integration tests. Because the integration tests interact with a real PostgreSQL database, the database must be running before you execute the test suite.
+
+1. Start the database (e.g., `docker-compose up -d db`)
+2. Run the tests: `mvn clean test`
+3. Wait for the tests to complete.
+
+### Starting the Application
 
 **Step 1: Start the Application**
 Navigate to the project root directory in your terminal and run the following command to build and start the containers:
@@ -8,7 +19,9 @@ Navigate to the project root directory in your terminal and run the following co
 ```bash
 docker compose up --build
 ```
-Step 2: Wait for Initialization The application will take a moment to download dependencies and initialize the database. Wait until you see the following line in your terminal's log output, which confirms the backend is ready:
+**Step 2: Wait for Initialization** 
+
+The application will take a moment to download dependencies and initialize the database. Wait until you see the following line in your terminal's log output, which confirms the backend is ready:
 main] o.s.boot.tomcat.TomcatWebServer : Tomcat started on port 8080 (http) with context path '/' <br>
 
 💻 Example Usage
@@ -19,14 +32,26 @@ Once the backend is successfully running, open your web browser and navigate to 
 ##### Shortening a URL 
 You will be presented with a user interface containing a form with the following fields:
 * Full URL: (Input field for the original long URL)
-* Custom Alias (Optional): (Input field for your preferred custom alias. 
-* [ Shorten ]: (A shorten button to submit the request)
+* Custom Alias (Optional): (Input field for your preferred custom alias) 
+* [ Shorten ] (A shorten button to submit the request)
 
 Once you press the [ Shorten ] button, the system will generate a shortened URL for you. <br> If you provided a custom alias, it will be used; otherwise, a random alias will be generated.
 ##### Viewing Your URLs 
 Directly below this form, you will find a list titled All Shortened URLs. This section will dynamically display the URLs you have successfully shortened and saved to the database.
+
+**API Usage**
+
+You can also interact directly with the REST API. Here is an example of shortening a URL via the terminal:
+```bash
+curl -X POST http://localhost:8080/shorten \
+-H "Content-Type: application/json" \
+-d '{"fullUrl": "https://example.com/very/long/url", "customAlias": "my-custom-alias"}'
+```
+
+
 ##### 💡 Assumptions
-Error Responses: There is no response body specified in the openapi.yaml contract for when an alias does not exist (404 Not Found). I was tempted to add a JSON error text message for clarity, but I deliberately left it empty to strictly conform with the provided OpenAPI specification
+**Error Responses:** 
+There is no response body specified in the openapi.yaml contract for when an alias does not exist (404 Not Found). I was tempted to add a JSON error text message for clarity, but I deliberately left it empty to strictly conform with the provided OpenAPI specification
 
 
 # URL Shortener Coding Exercise
