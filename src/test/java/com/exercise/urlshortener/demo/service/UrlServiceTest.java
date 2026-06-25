@@ -3,7 +3,6 @@ package com.exercise.urlshortener.demo.service;
 import com.exercise.urlshortener.demo.dto.UrlResponse;
 import com.exercise.urlshortener.demo.entity.UrlEntity;
 import com.exercise.urlshortener.demo.repository.UrlRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -120,7 +119,7 @@ class UrlServiceTest {
 
     @Test
     void getAllUrlsReturnsMappedDtoList() {
-        ReflectionTestUtils.setField(urlService, "baseUrl", "http://localhost:8080/");
+        ReflectionTestUtils.setField(urlService, "baseUrl", "http://localhost:8080");
 
         // Given
         UrlEntity entity = new UrlEntity();
