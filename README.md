@@ -1,8 +1,11 @@
 ## 🚀 Quick Start (How to Build and Run Locally)
 
 
-### 🚀 Pre-requisites
-To get this application running on your local machine, you will need Docker installed.
+### 🚀 Prerequisites
+To get this application running on your local machine, you will need:
+* **Docker:** Required for running the containerized application and the PostgreSQL database.
+* **JDK 17 or above:** Required if you wish to run the test suite or build the application locally using Maven. *(Note: This project has been successfully tested with both JDK 17 and JDK 21).*
+* **Maven:** Required for running the local test suite and building the project. *(Note: This project was built and tested using Maven 3.9.16).*
 
 ### Running Tests
 This project includes both unit tests and integration tests. Because the integration tests interact with a real PostgreSQL database, the database must be running before you execute the test suite.
