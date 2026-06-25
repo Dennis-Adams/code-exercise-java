@@ -9,6 +9,7 @@ function App() {
     // Initialize our state
     const [shortUrl, setShortUrl] = useState('');
     const [urls, setUrls] = useState([]);
+    const [apiError, setApiError] = useState('');
 
     // Create a function to fetch all URLs from the backend
     const fetchUrls = () => {
@@ -45,6 +46,7 @@ function App() {
         // console.log("Form data submitted:", data);
         // We will add the API call here in Part 3!
         setShortUrl('');
+        setApiError('');
 
         // Call your Spring Boot API
         axios.post('http://localhost:8080/shorten', data)
@@ -56,13 +58,16 @@ function App() {
             .catch(error => {
                 // Failure: capture the error from the API request
                 if (error.response) {
-                    setError('apiError', {
-                        message: error.response?.data?.message || 'Alias already taken or invalid input'
-                    });
+                    const responseData = error.response.data;
+                    if (typeof responseData === 'string' && responseData.trim()) {
+                        setApiError(responseData);
+                    } else if (responseData?.message) {
+                        setApiError(responseData.message);
+                    } else {
+                        setApiError('Alias already taken or invalid input');
+                    }
                 } else {
-                    setError('apiError', {
-                        message: 'An unexpected error occurred or network error: Cannot connect to the backend. Is back-end server running?'
-                    });
+                    setApiError('An unexpected error occurred or network error: Cannot connect to the backend. Is back-end server running?');
                 }
             });
     };
@@ -88,7 +93,8 @@ function App() {
             </form>
 
             {/* Display API Errors */}
-            {errors.apiError && <p style={{color: 'red', marginTop: '1rem'}}>{errors.apiError.message}</p>}
+            {apiError && <p style={{color: 'red', marginTop: '1rem'}}>{apiError}</p>}
+
             {/* Display Success */}
             {shortUrl && (
                 <div style={{marginTop: '1rem', color: 'green'}}>
